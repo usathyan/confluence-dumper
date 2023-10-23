@@ -13,7 +13,7 @@
 import requests
 import shutil
 import re
-import urllib
+import urllib.parse
 
 
 class ConfluenceException(Exception):
@@ -33,7 +33,7 @@ def http_get(request_url, auth=None, headers=None, verify_peer_certificate=True,
     :returns: JSON response.
     :raises: ConfluenceException in the case of the server does not answer HTTP code 200.
     """
-    response = requests.get(request_url, auth=auth, headers=headers, verify=verify_peer_certificate, proxies=proxies)
+    response = requests.get(request_url, headers=headers, verify=verify_peer_certificate, proxies=proxies)
     if 200 == response.status_code:
         return response.json()
     else:
@@ -53,7 +53,7 @@ def http_download_binary_file(request_url, file_path, auth=None, headers=None, v
     :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
     :raises: ConfluenceException in the case of the server does not answer with HTTP code 200.
     """
-    response = requests.get(request_url, stream=True, auth=auth, headers=headers, verify=verify_peer_certificate,
+    response = requests.get(request_url, stream=True, headers=headers, verify=verify_peer_certificate,
                             proxies=proxies)
     if 200 == response.status_code:
         with open(file_path, 'wb') as downloaded_file:
@@ -124,7 +124,7 @@ def decode_url(encoded_url):
     :param encoded_url: Encoded URL.
     :returns: Decoded URL.
     """
-    return urllib.unquote(encoded_url.encode('utf8')).decode('utf8')
+    return urllib.parse.unquote(encoded_url.encode('utf8')).encode('utf-8')
 
 
 def encode_url(decoded_url):
@@ -133,7 +133,7 @@ def encode_url(decoded_url):
     :param decoded_url: Decoded URL.
     :returns: Encoded URL.
     """
-    return urllib.quote(decoded_url.encode('utf8')).encode('utf8')
+    return urllib.parse.quote(decoded_url.encode('utf8')).encode('utf-8')
 
 
 def is_file_format(file_name, file_extensions):

@@ -200,7 +200,7 @@ def download_file(clean_url, download_folder, downloaded_file_name, depth=0, err
         print('%sDOWNLOAD: %s' % ('\t'*(depth+1), downloaded_file_name))
         try:
             utils.http_download_binary_file(absolute_download_url, downloaded_file_path,
-                                            auth=settings.HTTP_AUTHENTICATION, headers=settings.HTTP_CUSTOM_HEADERS,
+                                            headers=settings.HTTP_CUSTOM_HEADERS,
                                             verify_peer_certificate=settings.VERIFY_PEER_CERTIFICATE,
                                             proxies=settings.HTTP_PROXIES)
 
@@ -299,7 +299,7 @@ def fetch_page_recursively(page_id, folder_path, download_folder, html_template,
     page_url = '%s/rest/api/content/%s?expand=children.page,children.attachment,body.view.value' \
                % (settings.CONFLUENCE_BASE_URL, page_id)
     try:
-        response = utils.http_get(page_url, auth=settings.HTTP_AUTHENTICATION, headers=settings.HTTP_CUSTOM_HEADERS,
+        response = utils.http_get(page_url, headers=settings.HTTP_CUSTOM_HEADERS,
                                   verify_peer_certificate=settings.VERIFY_PEER_CERTIFICATE,
                                   proxies=settings.HTTP_PROXIES)
         page_content = response['body']['view']['value']
@@ -319,7 +319,7 @@ def fetch_page_recursively(page_id, folder_path, download_folder, html_template,
         page_url = '%s/rest/api/content/%s/child/attachment?limit=25' % (settings.CONFLUENCE_BASE_URL, page_id)
         counter = 0
         while page_url:
-            response = utils.http_get(page_url, auth=settings.HTTP_AUTHENTICATION, headers=settings.HTTP_CUSTOM_HEADERS,
+            response = utils.http_get(page_url, headers=settings.HTTP_CUSTOM_HEADERS,
                                       verify_peer_certificate=settings.VERIFY_PEER_CERTIFICATE,
                                       proxies=settings.HTTP_PROXIES)
             counter += len(response['results'])
@@ -357,7 +357,7 @@ def fetch_page_recursively(page_id, folder_path, download_folder, html_template,
         page_url = '%s/rest/api/content/%s/child/page?limit=25' % (settings.CONFLUENCE_BASE_URL, page_id)
         counter = 0
         while page_url:
-            response = utils.http_get(page_url, auth=settings.HTTP_AUTHENTICATION, headers=settings.HTTP_CUSTOM_HEADERS,
+            response = utils.http_get(page_url, headers=settings.HTTP_CUSTOM_HEADERS,
                                       verify_peer_certificate=settings.VERIFY_PEER_CERTIFICATE,
                                       proxies=settings.HTTP_PROXIES)
             counter += len(response['results'])
@@ -443,7 +443,7 @@ def main():
         spaces_to_export = []
         page_url = '%s/rest/api/space?limit=25' % settings.CONFLUENCE_BASE_URL
         while page_url:
-            response = utils.http_get(page_url, auth=settings.HTTP_AUTHENTICATION, headers=settings.HTTP_CUSTOM_HEADERS,
+            response = utils.http_get(page_url, headers=settings.HTTP_CUSTOM_HEADERS,
                                       verify_peer_certificate=settings.VERIFY_PEER_CERTIFICATE,
                                       proxies=settings.HTTP_PROXIES)
             for space in response['results']:
@@ -473,7 +473,7 @@ def main():
             os.makedirs(download_folder)
 
             space_url = '%s/rest/api/space/%s?expand=homepage' % (settings.CONFLUENCE_BASE_URL, space)
-            response = utils.http_get(space_url, auth=settings.HTTP_AUTHENTICATION,
+            response = utils.http_get(space_url,
                                       headers=settings.HTTP_CUSTOM_HEADERS,
                                       verify_peer_certificate=settings.VERIFY_PEER_CERTIFICATE,
                                       proxies=settings.HTTP_PROXIES)
